@@ -1,4 +1,3 @@
-
 const translateHandler = async () => {
   const textArea = document.getElementById("text-input");
   const localeArea = document.getElementById("locale-select");
