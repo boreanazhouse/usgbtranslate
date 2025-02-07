@@ -27,20 +27,21 @@ class Translator {
         // 1. Time
         const timeChanged = text.replace(timeRegex, timeReplace);
         // 2. Title
-        const titleChanged = Object.keys(titles).reduce((acc, title) => {
-            const regex = new RegExp(title, "gi");
+        // We have to sort the keys to prevent partial matching 
+        const titleChanged = Object.keys(titles).sort((a, b) => b.length - a.length).reduce((acc, title) => {
+            const regex = locale === "american-to-british" ? new RegExp(title, "gi") : new RegExp(`\\b${title}\\b`, "gi");
             const replacement = acc.replace(regex, `<span class="highlight">${titles[title].charAt(0).toUpperCase() + titles[title].slice(1)}</span>`);
             return replacement;
         }, timeChanged);
         // 3. Spelling
-        const spellingChanged = Object.keys(reverseDictionary).reduce((acc, word) => {
-            const regex = new RegExp(word, "gi");
+        const spellingChanged = Object.keys(reverseDictionary).sort((a, b) => b.length - a.length).reduce((acc, word) => {
+            const regex = new RegExp(`\\b${word}\\b`, "gi");
             const replacement = acc.replace(regex, `<span class="highlight">${reverseDictionary[word]}</span>`);
             return replacement;
         }, titleChanged);
         // 4. Slang
-        const slangChanged = Object.keys(dictionary).reduce((acc, word) => {
-            const regex = new RegExp(word, "gi");
+        const slangChanged = Object.keys(dictionary).sort((a, b) => b.length - a.length).reduce((acc, word) => {
+            const regex = new RegExp(`\\b${word}\\b`, "gi");
             const replacement = acc.replace(regex, `<span class="highlight">${dictionary[word]}</span>`);
             return replacement;
         }, spellingChanged);
